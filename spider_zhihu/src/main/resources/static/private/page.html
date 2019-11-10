@@ -1,0 +1,86 @@
+<script type="text/javascript">
+	function goPage(pageNumber) {
+		//var url = parent.getUrl();
+		var url = $("#searchForm").val();
+		var input = $("#searchForm input");
+		if(input.length>0){
+			url=url+"?"+input[0].name+"="+input[0].value
+			for(var i=1;i<input.length;i++){
+				url+="&"+input[i].name+"="+input[i].value
+			}
+		}
+		$("#pageNumber").val(pageNumber);
+		$("#formPage").attr("action", url);
+		$("#formPage").submit();
+	}
+</script>
+<form id="formPage" action="" method="post">
+	<input id="pageNumber" name="pageNumber" value="1" type="hidden" />
+	<input id="pagzSize" name="pagzSize" value="10" type="hidden" />
+</form>
+<nav aria-label="Page navigation" style="text-align: right;">
+	<ul class="pagination">
+		<li>
+			<a href="javascript:goPage(1);" aria-label="Previous" title="第一页">
+				<span aria-hidden="true">&laquo;</span>
+			</a>
+		</li>
+		<#if pageList??&&(pageList.number-4) gt 0>
+			<#assign start = pageList.number-3/>
+		<#else>
+			<#assign start = 1/>
+		</#if>
+		<#if pageList??&&pageList.totalPages gt 1>
+			<#if (start + 7) gt pageList.totalPages>
+				<#assign end  = pageList.totalPages/>
+			<#else>
+				<#assign end = start + 7/>
+			</#if>
+		<#else>
+			<#assign end = 1/>
+		</#if>
+		<#list start..end as page>
+			<#if pageList??&&pageList.number=(page-1)>
+				<li class="active">
+					<a href="javascript:goPage(${(page)!});">${(page)!}</a>
+				</li>
+			<#else>
+				<li>
+					<a href="javascript:goPage(${(page)!});">${(page)!}</a>
+				</li>
+			</#if>
+		</#list>
+		<!-- <#if pageList??>
+			<#if pageList.totalPages gt 0>
+				<#list 1..pageList.totalPages as page>
+					<#if pageList.number=( page-1)>
+						<li class="active">
+							<a href="javascript:goPage(${(page)!});">${(page)!}</a>
+						</li>
+						<#else>
+							<li>
+								<a href="javascript:goPage(${(page)!});">${(page)!}</a>
+							</li>
+					</#if>
+				</#list>
+				<#else>
+					<li class="active">
+						<a href="javascript:goPage(1});">1</a>
+					</li>
+			</#if>
+		</#if> -->
+		<#if pageList??&&pageList.totalPages gt 0>
+			<li>
+				<a href="javascript:goPage(${(pageList.totalPages)!});" aria-label="Next" title="末页">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+			<#else>
+				<li>
+					<a href="javascript:goPage(1);" aria-label="Next" title="末页">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+		</#if>
+	</ul>
+</nav>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spider.mapper.ZhiHuDao">
+    <select id="getHuaTi" resultType="map">
+    	select * from t_huati
+    </select>
+    <select id="getHuaTiById" resultType="map">
+    	select * from t_huati where id =#{id}
+    </select>
+    <update id="updateTotals">
+    	update t_huati set answer_totals =#{totals} where id =#{id}
+    </update>
+    <!--中间表 -->
+    <select id="countHuatiUser" resultType="Integer">
+    	select count(1) from t_huati_user where huati_id = #{huati_id} and user_id = #{user_id}
+    </select>
+    <insert id="insertHuatiUser" parameterType="map">
+    	insert into t_huati_user(huati_id, user_id, comment_count, voteup_count,create_time,update_time) 
+               values(#{params.huati_id}, #{params.user_id}, #{params.comment_count}, #{params.voteup_count}, now(),now())
+    </insert>
+    <update id="updateHuatiUser" parameterType="map">
+		update t_huati_user 
+			set comment_count = #{params.comment_count},
+			voteup_count = #{params.voteup_count},
+			update_time = now()
+		where huati_id = #{params.huati_id} and user_id = #{params.user_id}
+	</update>
+	<!--用户 -->
+    <select id="getZhihuUser" resultType="com.spider.zhihu.ZhihuUser">
+    	select * from t_user where id =#{id}
+    </select>
+    <select id="getZhihuUserList" resultType="com.spider.zhihu.ZhihuUser">
+    	select * from t_user order  by create_time desc
+    </select>
+    <insert id="insertUser" parameterType="com.spider.zhihu.ZhihuUser">
+    	insert into t_user(id,name, avatar_url, url_token, gender,type,headline,create_time,update_time) 
+               values(#{params.id}, #{params.name}, #{params.avatar_url}, #{params.url_token},
+               	 #{params.gender}, #{params.type},#{params.headline},now(),now())
+    </insert>
+	<update id="updateUser" parameterType="com.spider.zhihu.ZhihuUser">
+		update t_user 
+			set name = #{params.name},
+			avatar_url = #{params.avatar_url},
+			url_token = #{params.url_token},
+			gender = #{params.gender},
+			type = #{params.type},
+			headline = #{params.headline},
+			business = #{params.business},
+			description = #{params.description},
+			locations = #{params.locations},
+			update_time = now()
+		where id = #{params.id}
+	</update>
+	
+	
+	
+	<select id="getHuaTiUserPgeList" resultType="map">
+    	select t.*,h.comment_count,h.voteup_count from t_user t LEFT JOIN t_huati_user h on h.user_id=t.id
+				where h.huati_id= #{huatiId} ORDER BY h.create_time ASC  LIMIT #{start},#{end}
+    </select>
+    <select id="countHuaTiUserById" resultType="Integer">
+    	select count(1) from t_user t LEFT JOIN t_huati_user h on h.user_id=t.id
+				where h.huati_id= #{huatiId}
+    </select>
+</mapper>

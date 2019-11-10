@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>知乎话题-${(huati.title)!}</title>
+<#include "${(base)!}/private/head.html">
+</head>
+<body>
+	<div class="container-fluid" style="height: 100%;">
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="panel">
+					<div class="panel-body" >
+						<form id="searchForm" action="${(base)!}/zhihu/index" method="post" style="float: right;margin-bottom: 10px;">
+							<input name="id" value="${(id)!}" type="hidden">
+						</form>
+						<div>
+							<h2>${(huati.title)!}</h2>
+							<h5>${(huati.detail)!}</h5>
+							<div>回答数：${(huati.answer_totals)!}</div>
+						</div>
+						
+						<table class="table table-hover table-bordered">
+							<thead>
+								<tr class="info">
+									<th width="8%">序号</th>
+<!-- 									<th>头像</th> -->
+									<th width="15%">用户名称</th>
+									<th>性别</th>
+									<th>职业</th>
+									<th>位置</th>
+									<th>类型</th>
+									<th>点赞数</th>
+									<th>评论数</th>
+								</tr>
+							</thead>
+							<tbody>
+								<#if pageList?? && pageList.list??>
+									<#list pageList.list as list>
+										<tr>
+											<td>${(list_index+1)!}</td>
+<!-- 											<td><img alt="" src="${(list.avatar_url)!}"></td> -->
+											<td>${(list.name)!}</td>
+											<td>${(list.gender)!}</td>
+											<td>${(list.business)!}</td>
+											<td>${(list.locations)!}</td>
+											<td>${(list.type)!}</td>
+											<td>${(list.comment_count)!}</td>
+											<td>${(list.voteup_count)!}</td>
+										</tr>
+									</#list>
+								</#if>
+							</tbody>
+						</table>
+						<#include "${base}/private/page.html">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- 弹框 -->
+<div class="modal fade" id="ztreeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" style="width: 300px;height: 300px">
+		<div class="modal-content">
+			<div class="modal-body" id="ztree-body">
+				<ul id="treeDemo" class="ztree"></ul>
+			</div>
+		</div>
+	</div>
+</div>	
+</body>
+</html>
